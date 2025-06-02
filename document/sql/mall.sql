@@ -282,6 +282,102 @@ CREATE TABLE `cms_topic_comment`  (
 -- ----------------------------
 
 -- ----------------------------
+-- Table structure for mer_merchant
+-- ----------------------------
+DROP TABLE IF EXISTS `mer_merchant`;
+CREATE TABLE `mer_merchant` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Merchant Name',
+  `contact_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'Contact Person Name',
+  `contact_phone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'Contact Phone Number',
+  `contact_email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'Contact Email',
+  `address` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'Merchant Address',
+  `status` int(1) DEFAULT NULL COMMENT 'Status: 0->Pending, 1->Approved, 2->Rejected, 3->Active, 4->Inactive',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation Time',
+  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Update Time',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Merchant Information Table';
+
+-- ----------------------------
+-- Table structure for mer_merchant_qualification
+-- ----------------------------
+DROP TABLE IF EXISTS `mer_merchant_qualification`;
+CREATE TABLE `mer_merchant_qualification` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `merchant_id` bigint(20) NOT NULL COMMENT 'FK to mer_merchant.id',
+  `business_license_no` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'Business License Number',
+  `business_license_image_url` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'Business License Image URL',
+  `legal_representative_id_front_url` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'Legal Representative ID Front Image URL',
+  `legal_representative_id_back_url` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'Legal Representative ID Back Image URL',
+  `submission_date` datetime DEFAULT NULL COMMENT 'Submission Date',
+  `review_date` datetime DEFAULT NULL COMMENT 'Review Date',
+  `review_status` int(1) DEFAULT NULL COMMENT 'Review Status: 0->Pending, 1->Approved, 2->Rejected',
+  `review_notes` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'Review Notes',
+  PRIMARY KEY (`id`),
+  KEY `fk_merchant_qualification_merchant_id` (`merchant_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Merchant Qualification Table';
+
+-- ----------------------------
+-- Table structure for mer_merchant_level
+-- ----------------------------
+DROP TABLE IF EXISTS `mer_merchant_level`;
+CREATE TABLE `mer_merchant_level` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `level_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Level Name',
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci COMMENT 'Description',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation Time',
+  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Update Time',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Merchant Level Table';
+
+-- ----------------------------
+-- Records of mer_merchant_level
+-- ----------------------------
+INSERT INTO `mer_merchant_level` (`level_name`, `description`) VALUES
+('基础版', 'Basic merchant package'),
+('标准版', 'Standard merchant package'),
+('旗舰版', 'Premium merchant package');
+
+-- ----------------------------
+-- Table structure for mer_merchant_package
+-- ----------------------------
+DROP TABLE IF EXISTS `mer_merchant_package`;
+CREATE TABLE `mer_merchant_package` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `merchant_id` bigint(20) NOT NULL COMMENT 'FK to mer_merchant.id',
+  `level_id` bigint(20) NOT NULL COMMENT 'FK to mer_merchant_level.id',
+  `commission_rate` decimal(5,2) DEFAULT NULL COMMENT 'Commission Rate (e.g., 0.05 for 5%)',
+  `start_date` datetime DEFAULT NULL COMMENT 'Start Date',
+  `end_date` datetime DEFAULT NULL COMMENT 'End Date',
+  `is_active` tinyint(1) DEFAULT 1 COMMENT 'Is Active',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation Time',
+  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Update Time',
+  PRIMARY KEY (`id`),
+  KEY `fk_merchant_package_merchant_id` (`merchant_id`),
+  KEY `fk_merchant_package_level_id` (`level_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Merchant Package Table';
+
+-- ----------------------------
+-- Table structure for oms_order_item_commission
+-- ----------------------------
+DROP TABLE IF EXISTS `oms_order_item_commission`;
+CREATE TABLE `oms_order_item_commission` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `order_item_id` bigint(20) NOT NULL COMMENT 'FK to oms_order_item.id',
+  `merchant_id` bigint(20) NOT NULL COMMENT 'FK to mer_merchant.id',
+  `product_id` bigint(20) NOT NULL COMMENT 'FK to pms_product.id',
+  `order_id` bigint(20) NOT NULL COMMENT 'FK to oms_order.id',
+  `commission_rate` decimal(5,2) NOT NULL COMMENT 'Commission Rate at time of calculation',
+  `commission_amount` decimal(10,2) NOT NULL COMMENT 'Calculated Commission Amount',
+  `calculated_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT 'Calculation Time',
+  PRIMARY KEY (`id`),
+  KEY `idx_order_item_commission_order_item_id` (`order_item_id`),
+  KEY `idx_order_item_commission_merchant_id` (`merchant_id`),
+  KEY `idx_order_item_commission_product_id` (`product_id`),
+  KEY `idx_order_item_commission_order_id` (`order_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Order Item Commission Table';
+
+-- ----------------------------
 -- Table structure for oms_cart_item
 -- ----------------------------
 DROP TABLE IF EXISTS `oms_cart_item`;
@@ -3255,3 +3351,44 @@ INSERT INTO `ums_role_resource_relation` VALUES (247, 1, 31);
 INSERT INTO `ums_role_resource_relation` VALUES (248, 1, 32);
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+-- ----------------------------
+-- Alter existing tables to add merchant_id and FK constraints
+-- ----------------------------
+
+-- Add merchant_id to ums_admin
+ALTER TABLE `ums_admin`
+ADD COLUMN `merchant_id` bigint(20) NULL DEFAULT NULL COMMENT 'FK to mer_merchant.id' AFTER `status`,
+ADD CONSTRAINT `fk_ums_admin_merchant_id` FOREIGN KEY (`merchant_id`) REFERENCES `mer_merchant` (`id`) ON DELETE SET NULL;
+
+-- Add merchant_id to pms_product
+ALTER TABLE `pms_product`
+ADD COLUMN `merchant_id` bigint(20) NULL DEFAULT NULL COMMENT 'FK to mer_merchant.id' AFTER `product_category_name`,
+ADD CONSTRAINT `fk_pms_product_merchant_id` FOREIGN KEY (`merchant_id`) REFERENCES `mer_merchant` (`id`) ON DELETE CASCADE;
+
+-- Add merchant_id to pms_sku_stock
+ALTER TABLE `pms_sku_stock`
+ADD COLUMN `merchant_id` bigint(20) NULL DEFAULT NULL COMMENT 'FK to mer_merchant.id' AFTER `sp_data`,
+ADD CONSTRAINT `fk_pms_sku_stock_merchant_id` FOREIGN KEY (`merchant_id`) REFERENCES `mer_merchant` (`id`) ON DELETE CASCADE;
+
+-- Add merchant_id to oms_order_item
+ALTER TABLE `oms_order_item`
+ADD COLUMN `merchant_id` bigint(20) NULL DEFAULT NULL COMMENT 'FK to mer_merchant.id' AFTER `product_attr`,
+ADD CONSTRAINT `fk_oms_order_item_merchant_id` FOREIGN KEY (`merchant_id`) REFERENCES `mer_merchant` (`id`) ON DELETE SET NULL;
+
+-- ----------------------------
+-- Add FK constraints for new tables that depend on existing tables or other new tables
+-- ----------------------------
+
+ALTER TABLE `mer_merchant_qualification`
+ADD CONSTRAINT `fk_mer_merchant_qualification_merchant_id` FOREIGN KEY (`merchant_id`) REFERENCES `mer_merchant` (`id`) ON DELETE CASCADE;
+
+ALTER TABLE `mer_merchant_package`
+ADD CONSTRAINT `fk_mer_merchant_package_merchant_id` FOREIGN KEY (`merchant_id`) REFERENCES `mer_merchant` (`id`) ON DELETE CASCADE,
+ADD CONSTRAINT `fk_mer_merchant_package_level_id` FOREIGN KEY (`level_id`) REFERENCES `mer_merchant_level` (`id`);
+
+ALTER TABLE `oms_order_item_commission`
+ADD CONSTRAINT `fk_commission_order_item_id` FOREIGN KEY (`order_item_id`) REFERENCES `oms_order_item` (`id`) ON DELETE CASCADE,
+ADD CONSTRAINT `fk_commission_merchant_id` FOREIGN KEY (`merchant_id`) REFERENCES `mer_merchant` (`id`) ON DELETE CASCADE,
+ADD CONSTRAINT `fk_commission_product_id` FOREIGN KEY (`product_id`) REFERENCES `pms_product` (`id`) ON DELETE CASCADE,
+ADD CONSTRAINT `fk_commission_order_id` FOREIGN KEY (`order_id`) REFERENCES `oms_order` (`id`) ON DELETE CASCADE;

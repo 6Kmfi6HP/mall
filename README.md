@@ -141,6 +141,31 @@ mall
 
 ![项目开发进度图](./document/resource/re_mall_dev_flow.jpg)
 
+## Multi-Merchant System Enhancements
+
+The `mall` project has been enhanced to support a multi-merchant architecture. This allows multiple vendors to register, manage their products, and sell through the platform. Key enhancements include:
+
+*   **Merchant Onboarding:** A process for new merchants to apply for registration, submit qualifications, and for administrators to review and approve/reject these applications.
+*   **Product Management per Merchant:** Approved merchants can manage their own product listings. Products are now associated with specific merchants.
+*   **Order Segregation (Implied):** While not fully detailed here, order items are now linked to merchants, enabling order processing and fulfillment per merchant.
+*   **Commission Calculation:** A system for calculating commission on order items for merchants based on their package levels.
+
+**New Database Tables:**
+
+*   `mer_merchant`: Stores core information about each merchant.
+*   `mer_merchant_qualification`: Manages merchant legal and business qualifications.
+*   `mer_merchant_level`: Defines different tiers or levels for merchants (e.g., Basic, Standard, Premium).
+*   `mer_merchant_package`: Assigns merchants to specific levels and defines their commission rates and package validity.
+*   `oms_order_item_commission`: Records the calculated commission for each order item belonging to a merchant.
+
+### Documentation TODOs for Developers
+
+To ensure the project documentation is comprehensive and up-to-date with the multi-merchant features, the following tasks need to be completed by the development team:
+
+*   **Update Physical Data Model (PDM):** Update `document/pdm/mall.pdm` to include the new merchant-related tables (`mer_merchant`, `mer_merchant_qualification`, `mer_merchant_level`, `mer_merchant_package`, `oms_order_item_commission`) and their relationships using PowerDesigner or a compatible data modeling tool.
+*   **Update Architecture Diagrams:** Revise existing architecture diagrams located in `document/pos/` (e.g., `业务架构图.pos`, `系统架构图.pos`) to accurately reflect the multi-merchant components, data flows, and service interactions.
+*   **Integrate API Documentation:** Incorporate the API snippets from `document/api_snippets_merchant_module.md` into the project's formal API documentation. This may involve updating Postman collections, Swagger/OpenAPI specifications, or other API documentation tools used by the project.
+
 ## 环境搭建
 
 ### 开发工具
