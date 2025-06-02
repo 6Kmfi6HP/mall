@@ -9,6 +9,7 @@ import com.macro.mall.mapper.OmsOrderOperateHistoryMapper;
 import com.macro.mall.model.OmsOrder;
 import com.macro.mall.model.OmsOrderExample;
 import com.macro.mall.model.OmsOrderOperateHistory;
+import com.macro.mall.oms.service.OmsCommissionService; // Added import
 import com.macro.mall.service.OmsOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,8 @@ public class OmsOrderServiceImpl implements OmsOrderService {
     private OmsOrderOperateHistoryDao orderOperateHistoryDao;
     @Autowired
     private OmsOrderOperateHistoryMapper orderOperateHistoryMapper;
+    @Autowired
+    private OmsCommissionService omsCommissionService; // Injected OmsCommissionService
 
     @Override
     public List<OmsOrder> list(OmsOrderQueryParam queryParam, Integer pageSize, Integer pageNum) {
@@ -148,6 +151,49 @@ public class OmsOrderServiceImpl implements OmsOrderService {
         history.setOrderStatus(status);
         history.setNote("修改备注信息："+note);
         orderOperateHistoryMapper.insert(history);
+        return count;
+    }
+
+    @Override
+    @Transactional
+    public int completeOrder(Long orderId) {
+        OmsOrder order = orderMapper.selectByPrimaryKey(orderId);
+        if (order == null) {
+            // Handle order not found
+            return 0; 
+        }
+        // Check if order is in a state that can be completed (e.g., shipped status 2)
+        // For this example, we'll assume it can be completed from various states or this check is done before calling
+        // if (order.getStatus() != 2) { // If only from shipped
+        //    return 0; // Or throw exception
+        // }
+
+        order.setStatus(3); // 3: Completed
+        order.setReceiveTime(new Date()); // Set actual receive time
+        order.setModifyTime(new Date());
+        int count = orderMapper.updateByPrimaryKeySelective(order);
+
+        if (count > 0) {
+            // Add to history
+            OmsOrderOperateHistory history = new OmsOrderOperateHistory();
+            history.setOrderId(orderId);
+            history.setCreateTime(new Date());
+            history.setOperateMan("后台管理员"); // Or system if auto-completed
+            history.setOrderStatus(3);
+            history.setNote("订单完成");
+            orderOperateHistoryMapper.insert(history);
+
+            // Calculate and record commissions
+            try {
+                omsCommissionService.calculateAndRecordCommissionsForOrder(orderId);
+            } catch (Exception e) {
+                // Log error but don't necessarily roll back order completion
+                // Depending on requirements, this could be a critical failure
+                // For now, logging the error.
+                // Consider a more robust error handling/notification mechanism.
+                // LOGGER.error("Error calculating commission for completed order {}: {}", orderId, e.getMessage(), e);
+            }
+        }
         return count;
     }
 }

@@ -55,4 +55,12 @@ public interface OmsOrderService {
      */
     @Transactional
     int updateNote(Long id, String note, Integer status);
+
+    /**
+     * 完成订单（标记为已完成状态，触发后续流程如佣金计算等）
+     * @param orderId 订单ID
+     * @return 操作影响的行数
+     */
+    @Transactional
+    int completeOrder(Long orderId);
 }

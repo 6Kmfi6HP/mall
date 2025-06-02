@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.macro.mall.mapper.OmsOrderItemCommissionMapper">
+  <resultMap id="BaseResultMap" type="com.macro.mall.model.OmsOrderItemCommission">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="order_item_id" jdbcType="BIGINT" property="orderItemId" />
+    <result column="merchant_id" jdbcType="BIGINT" property="merchantId" />
+    <result column="product_id" jdbcType="BIGINT" property="productId" />
+    <result column="order_id" jdbcType="BIGINT" property="orderId" />
+    <result column="commission_rate" jdbcType="DECIMAL" property="commissionRate" />
+    <result column="commission_amount" jdbcType="DECIMAL" property="commissionAmount" />
+    <result column="calculated_time" jdbcType="TIMESTAMP" property="calculatedTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, order_item_id, merchant_id, product_id, order_id, commission_rate, commission_amount, 
+    calculated_time
+  </sql>
+  <select id="selectByExample" parameterType="com.macro.mall.model.OmsOrderItemCommissionExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from oms_order_item_commission
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from oms_order_item_commission
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from oms_order_item_commission
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.macro.mall.model.OmsOrderItemCommissionExample">
+    delete from oms_order_item_commission
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.macro.mall.model.OmsOrderItemCommission" useGeneratedKeys="true" keyProperty="id">
+    insert into oms_order_item_commission (order_item_id, merchant_id, product_id, 
+      order_id, commission_rate, commission_amount, 
+      calculated_time)
+    values (#{orderItemId,jdbcType=BIGINT}, #{merchantId,jdbcType=BIGINT}, #{productId,jdbcType=BIGINT}, 
+      #{orderId,jdbcType=BIGINT}, #{commissionRate,jdbcType=DECIMAL}, #{commissionAmount,jdbcType=DECIMAL}, 
+      #{calculatedTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.macro.mall.model.OmsOrderItemCommission" useGeneratedKeys="true" keyProperty="id">
+    insert into oms_order_item_commission
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="orderItemId != null">
+        order_item_id,
+      </if>
+      <if test="merchantId != null">
+        merchant_id,
+      </if>
+      <if test="productId != null">
+        product_id,
+      </if>
+      <if test="orderId != null">
+        order_id,
+      </if>
+      <if test="commissionRate != null">
+        commission_rate,
+      </if>
+      <if test="commissionAmount != null">
+        commission_amount,
+      </if>
+      <if test="calculatedTime != null">
+        calculated_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="orderItemId != null">
+        #{orderItemId,jdbcType=BIGINT},
+      </if>
+      <if test="merchantId != null">
+        #{merchantId,jdbcType=BIGINT},
+      </if>
+      <if test="productId != null">
+        #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="orderId != null">
+        #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="commissionRate != null">
+        #{commissionRate,jdbcType=DECIMAL},
+      </if>
+      <if test="commissionAmount != null">
+        #{commissionAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="calculatedTime != null">
+        #{calculatedTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.macro.mall.model.OmsOrderItemCommissionExample" resultType="java.lang.Long">
+    select count(*) from oms_order_item_commission
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update oms_order_item_commission
+    <set>
+      <if test="row.id != null">
+        id = #{row.id,jdbcType=BIGINT},
+      </if>
+      <if test="row.orderItemId != null">
+        order_item_id = #{row.orderItemId,jdbcType=BIGINT},
+      </if>
+      <if test="row.merchantId != null">
+        merchant_id = #{row.merchantId,jdbcType=BIGINT},
+      </if>
+      <if test="row.productId != null">
+        product_id = #{row.productId,jdbcType=BIGINT},
+      </if>
+      <if test="row.orderId != null">
+        order_id = #{row.orderId,jdbcType=BIGINT},
+      </if>
+      <if test="row.commissionRate != null">
+        commission_rate = #{row.commissionRate,jdbcType=DECIMAL},
+      </if>
+      <if test="row.commissionAmount != null">
+        commission_amount = #{row.commissionAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="row.calculatedTime != null">
+        calculated_time = #{row.calculatedTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update oms_order_item_commission
+    set id = #{row.id,jdbcType=BIGINT},
+      order_item_id = #{row.orderItemId,jdbcType=BIGINT},
+      merchant_id = #{row.merchantId,jdbcType=BIGINT},
+      product_id = #{row.productId,jdbcType=BIGINT},
+      order_id = #{row.orderId,jdbcType=BIGINT},
+      commission_rate = #{row.commissionRate,jdbcType=DECIMAL},
+      commission_amount = #{row.commissionAmount,jdbcType=DECIMAL},
+      calculated_time = #{row.calculatedTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.macro.mall.model.OmsOrderItemCommission">
+    update oms_order_item_commission
+    <set>
+      <if test="orderItemId != null">
+        order_item_id = #{orderItemId,jdbcType=BIGINT},
+      </if>
+      <if test="merchantId != null">
+        merchant_id = #{merchantId,jdbcType=BIGINT},
+      </if>
+      <if test="productId != null">
+        product_id = #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="orderId != null">
+        order_id = #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="commissionRate != null">
+        commission_rate = #{commissionRate,jdbcType=DECIMAL},
+      </if>
+      <if test="commissionAmount != null">
+        commission_amount = #{commissionAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="calculatedTime != null">
+        calculated_time = #{calculatedTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.macro.mall.model.OmsOrderItemCommission">
+    update oms_order_item_commission
+    set order_item_id = #{orderItemId,jdbcType=BIGINT},
+      merchant_id = #{merchantId,jdbcType=BIGINT},
+      product_id = #{productId,jdbcType=BIGINT},
+      order_id = #{orderId,jdbcType=BIGINT},
+      commission_rate = #{commissionRate,jdbcType=DECIMAL},
+      commission_amount = #{commissionAmount,jdbcType=DECIMAL},
+      calculated_time = #{calculatedTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
