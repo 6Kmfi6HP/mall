@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.macro.mall.mapper.MerMerchantQualificationMapper">
+  <resultMap id="BaseResultMap" type="com.macro.mall.model.MerMerchantQualification">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="merchant_id" jdbcType="BIGINT" property="merchantId" />
+    <result column="business_license_no" jdbcType="VARCHAR" property="businessLicenseNo" />
+    <result column="business_license_image_url" jdbcType="VARCHAR" property="businessLicenseImageUrl" />
+    <result column="legal_representative_id_front_url" jdbcType="VARCHAR" property="legalRepresentativeIdFrontUrl" />
+    <result column="legal_representative_id_back_url" jdbcType="VARCHAR" property="legalRepresentativeIdBackUrl" />
+    <result column="submission_date" jdbcType="TIMESTAMP" property="submissionDate" />
+    <result column="review_date" jdbcType="TIMESTAMP" property="reviewDate" />
+    <result column="review_status" jdbcType="INTEGER" property="reviewStatus" />
+    <result column="review_notes" jdbcType="VARCHAR" property="reviewNotes" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, merchant_id, business_license_no, business_license_image_url, legal_representative_id_front_url, 
+    legal_representative_id_back_url, submission_date, review_date, review_status, 
+    review_notes
+  </sql>
+  <select id="selectByExample" parameterType="com.macro.mall.model.MerMerchantQualificationExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from mer_merchant_qualification
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from mer_merchant_qualification
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectByMerchantId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from mer_merchant_qualification
+    where merchant_id = #{merchantId,jdbcType=BIGINT}
+  </select>
+  <select id="selectByMerchantId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from mer_merchant_qualification
+    where merchant_id = #{merchantId,jdbcType=BIGINT}
+    limit 1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from mer_merchant_qualification
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.macro.mall.model.MerMerchantQualificationExample">
+    delete from mer_merchant_qualification
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.macro.mall.model.MerMerchantQualification" useGeneratedKeys="true" keyProperty="id">
+    insert into mer_merchant_qualification (merchant_id, business_license_no, 
+      business_license_image_url, legal_representative_id_front_url, 
+      legal_representative_id_back_url, submission_date, review_date, 
+      review_status, review_notes)
+    values (#{merchantId,jdbcType=BIGINT}, #{businessLicenseNo,jdbcType=VARCHAR}, 
+      #{businessLicenseImageUrl,jdbcType=VARCHAR}, #{legalRepresentativeIdFrontUrl,jdbcType=VARCHAR}, 
+      #{legalRepresentativeIdBackUrl,jdbcType=VARCHAR}, #{submissionDate,jdbcType=TIMESTAMP}, #{reviewDate,jdbcType=TIMESTAMP}, 
+      #{reviewStatus,jdbcType=INTEGER}, #{reviewNotes,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.macro.mall.model.MerMerchantQualification" useGeneratedKeys="true" keyProperty="id">
+    insert into mer_merchant_qualification
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="merchantId != null">
+        merchant_id,
+      </if>
+      <if test="businessLicenseNo != null">
+        business_license_no,
+      </if>
+      <if test="businessLicenseImageUrl != null">
+        business_license_image_url,
+      </if>
+      <if test="legalRepresentativeIdFrontUrl != null">
+        legal_representative_id_front_url,
+      </if>
+      <if test="legalRepresentativeIdBackUrl != null">
+        legal_representative_id_back_url,
+      </if>
+      <if test="submissionDate != null">
+        submission_date,
+      </if>
+      <if test="reviewDate != null">
+        review_date,
+      </if>
+      <if test="reviewStatus != null">
+        review_status,
+      </if>
+      <if test="reviewNotes != null">
+        review_notes,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="merchantId != null">
+        #{merchantId,jdbcType=BIGINT},
+      </if>
+      <if test="businessLicenseNo != null">
+        #{businessLicenseNo,jdbcType=VARCHAR},
+      </if>
+      <if test="businessLicenseImageUrl != null">
+        #{businessLicenseImageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="legalRepresentativeIdFrontUrl != null">
+        #{legalRepresentativeIdFrontUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="legalRepresentativeIdBackUrl != null">
+        #{legalRepresentativeIdBackUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="submissionDate != null">
+        #{submissionDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reviewDate != null">
+        #{reviewDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reviewStatus != null">
+        #{reviewStatus,jdbcType=INTEGER},
+      </if>
+      <if test="reviewNotes != null">
+        #{reviewNotes,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.macro.mall.model.MerMerchantQualificationExample" resultType="java.lang.Long">
+    select count(*) from mer_merchant_qualification
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update mer_merchant_qualification
+    <set>
+      <if test="row.id != null">
+        id = #{row.id,jdbcType=BIGINT},
+      </if>
+      <if test="row.merchantId != null">
+        merchant_id = #{row.merchantId,jdbcType=BIGINT},
+      </if>
+      <if test="row.businessLicenseNo != null">
+        business_license_no = #{row.businessLicenseNo,jdbcType=VARCHAR},
+      </if>
+      <if test="row.businessLicenseImageUrl != null">
+        business_license_image_url = #{row.businessLicenseImageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="row.legalRepresentativeIdFrontUrl != null">
+        legal_representative_id_front_url = #{row.legalRepresentativeIdFrontUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="row.legalRepresentativeIdBackUrl != null">
+        legal_representative_id_back_url = #{row.legalRepresentativeIdBackUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="row.submissionDate != null">
+        submission_date = #{row.submissionDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.reviewDate != null">
+        review_date = #{row.reviewDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.reviewStatus != null">
+        review_status = #{row.reviewStatus,jdbcType=INTEGER},
+      </if>
+      <if test="row.reviewNotes != null">
+        review_notes = #{row.reviewNotes,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update mer_merchant_qualification
+    set id = #{row.id,jdbcType=BIGINT},
+      merchant_id = #{row.merchantId,jdbcType=BIGINT},
+      business_license_no = #{row.businessLicenseNo,jdbcType=VARCHAR},
+      business_license_image_url = #{row.businessLicenseImageUrl,jdbcType=VARCHAR},
+      legal_representative_id_front_url = #{row.legalRepresentativeIdFrontUrl,jdbcType=VARCHAR},
+      legal_representative_id_back_url = #{row.legalRepresentativeIdBackUrl,jdbcType=VARCHAR},
+      submission_date = #{row.submissionDate,jdbcType=TIMESTAMP},
+      review_date = #{row.reviewDate,jdbcType=TIMESTAMP},
+      review_status = #{row.reviewStatus,jdbcType=INTEGER},
+      review_notes = #{row.reviewNotes,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.macro.mall.model.MerMerchantQualification">
+    update mer_merchant_qualification
+    <set>
+      <if test="merchantId != null">
+        merchant_id = #{merchantId,jdbcType=BIGINT},
+      </if>
+      <if test="businessLicenseNo != null">
+        business_license_no = #{businessLicenseNo,jdbcType=VARCHAR},
+      </if>
+      <if test="businessLicenseImageUrl != null">
+        business_license_image_url = #{businessLicenseImageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="legalRepresentativeIdFrontUrl != null">
+        legal_representative_id_front_url = #{legalRepresentativeIdFrontUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="legalRepresentativeIdBackUrl != null">
+        legal_representative_id_back_url = #{legalRepresentativeIdBackUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="submissionDate != null">
+        submission_date = #{submissionDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reviewDate != null">
+        review_date = #{reviewDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reviewStatus != null">
+        review_status = #{reviewStatus,jdbcType=INTEGER},
+      </if>
+      <if test="reviewNotes != null">
+        review_notes = #{reviewNotes,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.macro.mall.model.MerMerchantQualification">
+    update mer_merchant_qualification
+    set merchant_id = #{merchantId,jdbcType=BIGINT},
+      business_license_no = #{businessLicenseNo,jdbcType=VARCHAR},
+      business_license_image_url = #{businessLicenseImageUrl,jdbcType=VARCHAR},
+      legal_representative_id_front_url = #{legalRepresentativeIdFrontUrl,jdbcType=VARCHAR},
+      legal_representative_id_back_url = #{legalRepresentativeIdBackUrl,jdbcType=VARCHAR},
+      submission_date = #{submissionDate,jdbcType=TIMESTAMP},
+      review_date = #{reviewDate,jdbcType=TIMESTAMP},
+      review_status = #{reviewStatus,jdbcType=INTEGER},
+      review_notes = #{reviewNotes,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
